@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #ffffff, #f2f2f2);
+            font-family: 'Open Sans', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        #password-prompt, #writing-container, #heart {
+            text-align: center;
+            display: none;
+        }
+        #password-prompt {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="text"] {
+            font-size: 16px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #000;
+            border-radius: 4px;
+            width: 90%;
+            max-width: 300px;
+        }
+        button {
+            font-size: 14px;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #DAA520;
+            color: #000;
+        }
+
+        /* Heart Animation */
+        .heart {
+            font-size: 50px;
+            color: red;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        .broken-heart {
+            font-size: 50px;
+            color: red;
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Writing Animation */
+        .writing-text {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 12pt;
+            line-height: 2;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            border: 2px solid #000;
+            padding: 20px;
+            box-shadow: 4px 4px 0 #000;
+            background: linear-gradient(white, #f9f9f9);
+            white-space: pre-wrap;
+        }
+        .writing-text span {
+            display: inline-block;
+            white-space: pre;
+            opacity: 0;
+            animation: appear 0.05s forwards;
+        }
+        @keyframes appear {
+            to { opacity: 1; }
+        }
+
+        /* Decorative Lines */
+        hr {
+            border: none;
+            border-top: 2px solid #000;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div id="password-prompt">
+        <h1 style="font-family: 'Cinzel Decorative', serif; color: #DAA520;">pretty please provide the password EK listed on her instagram</h1>
+        <input type="text" id="password-input" placeholder="Enter the password here">
+        <button onclick="validatePassword()">Submit</button>
+        <div id="heart" class=""></div>
+    </div>
+    <div id="writing-container">
+        <h1 style="font-family: 'Cinzel Decorative', serif; color: #DAA520;">Testing Page</h1>
+        <hr>
+        <div class="writing-text" id="writing-text"></div>
+        <button onclick="toggleTheme()">Switch Theme</button>
+    </div>
+
+    <script>
+        const correctPassword = "absolutely no carnations"; // Case-insensitive
+        const textToDisplay = `
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+“testtestestestest”
+“testtestestestest” 
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+“testtestestestest”
+“testtestestestest” 
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+“testtestestestest”
+“testtestestestest” 
+testtestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestesttesttestestestest
+`;
+        const writingContainer = document.getElementById('writing-container');
+        const writingText = document.getElementById('writing-text');
+        const passwordPrompt = document.getElementById('password-prompt');
+        const heart = document.getElementById('heart');
+
+        // Initialize the page
+        passwordPrompt.style.display = "flex";
+
+        function validatePassword() {
+            const input = document.getElementById('password-input').value.trim().toLowerCase();
+            if (input === correctPassword) {
+                showHeart(false);
+                setTimeout(showTextAnimation, 2000); // Wait for the heart animation
+            } else {
+                showHeart(true);
+            }
+        }
+
+        function showHeart(isBroken) {
+            heart.style.display = "block";
+            heart.className = isBroken ? "broken-heart" : "heart";
+            heart.textContent = isBroken ? "💔" : "❤️";
+            if (isBroken) {
+                setTimeout(() => { heart.style.display = "none"; }, 1000);
+            }
+        }
+
+        function showTextAnimation() {
+            passwordPrompt.style.display = "none";
+            heart.style.display = "none";
+            writingContainer.style.display = "block";
+
+            // Writing animation
+            writingText.innerHTML = '';
+            textToDisplay.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.animationDelay = `${index * 0.05}s`;
+                writingText.appendChild(span);
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
